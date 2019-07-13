@@ -1,0 +1,78 @@
+{% extends 'Home/layout/main.html' %}
+
+{% block main %}
+    <script>
+        // Call API to fetch cart count
+        function getCartItemsCount() {
+            var count = 0;
+            $.get('http://127.0.0.1:8000/cart/count/', function(data, status) {
+                $('#cart-badge').html(data.count);
+            });
+        }
+        window.onload = getCartItemsCount;
+
+        // Add to cart
+        function getCartBadgeCount() {
+            return parseInt(document.getElementById('cart-badge').textContent);
+        }
+
+        function cart(itemId) {
+            var quantity = $('#quantity-' + itemId).val();
+            $.ajax({
+                url: `http://127.0.0.1:8000/cart/${itemId}/${quantity}/`,
+                success: function() {
+                    document.getElementById('cart-badge').innerHTML = getCartBadgeCount() + parseInt(quantity);
+                }
+            });
+        }
+    </script>
+
+    <div class="navbar">
+        <div class="container">
+            <div class="navbar-inner">
+                <div class="nav-item nav-left">
+                    <a href="{% url 'home' %}" class="logo"></a>
+                </div>
+
+                <div class="nav-item nav-center">
+                    <input class="input search-input" type="search" placeholder="Search for an item..." name="search" id="nav-search">
+                </div>
+
+                <div class="nav-item nav-right">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'cart' %}" class="btn">
+                            <span class="mr-1">Cart</span>
+                            <span class="badge badge-dark" id="cart-badge">0</span>
+                        </a>
+
+                        <div class="btn-group">
+                            <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ request.user.username }}</button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#"><span class="icon-user-shape mr-2"></span> Account</a>
+                                <a class="dropdown-item" href="#"><span class="icon-settings-cogwheel-button mr-2"></span> Settings</a>
+                                <a class="dropdown-item" href="{% url 'sell' %}"><span class="icon-front-store mr-2"></span> Sell</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}"><span class="icon-change-power-options mr-2"></span> Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                        <span class="btn btn-sm">or</span>
+                        <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}

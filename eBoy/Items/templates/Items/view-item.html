@@ -1,0 +1,49 @@
+{% extends 'Home/layout/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-7">
+            <img class="img-fluid" src="{{ item.image.url }}">
+        </div>
+
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="cart-title">{{ item.title }}</h4>
+                    <h5 class="mt-3">
+                        <b>${{ item.price|intcomma }}</b>
+                    </h5>
+
+                    <div class="form-row">
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-secondary" onclick="cart('{{ item.id }}')"><span class="icon-shopping-cart mr-2"></span> Add to cart</button>
+                        </div>
+
+                        <div class="col-auto">
+                            <select class="form-control btn-sm" style="height: auto" id="quantity-{{ item.id }}">
+                                <option value="1">Qnt: 1</option>
+                                <option value="2">Qnt: 2</option>
+                                <option value="3">Qnt: 3</option>
+                                <option value="4">Qnt: 4</option>
+                                <option value="5">Qnt: 5</option>
+                                <option value="6">Qnt: 6</option>
+                                <option value="7">Qnt: 7</option>
+                                <option value="8">Qnt: 8</option>
+                                <option value="9">Qnt: 9</option>
+                                <option value="10">Qnt: 10+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p class="mt-3 card-text">
+                        <b>Description:</b>
+                        <br>
+                        {{ item.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
