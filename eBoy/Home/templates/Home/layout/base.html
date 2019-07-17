@@ -1,31 +1,7 @@
 {% extends 'Home/layout/main.html' %}
 
 {% block main %}
-    <script>
-        // Call API to fetch cart count
-        function getCartItemsCount() {
-            var count = 0;
-            $.get('http://127.0.0.1:8000/cart/count/', function(data, status) {
-                $('#cart-badge').html(data.count);
-            });
-        }
-        window.onload = getCartItemsCount;
-
-        // Add to cart
-        function getCartBadgeCount() {
-            return parseInt(document.getElementById('cart-badge').textContent);
-        }
-
-        function cart(itemId) {
-            var quantity = $('#quantity-' + itemId).val();
-            $.ajax({
-                url: `http://127.0.0.1:8000/cart/${itemId}/${quantity}/`,
-                success: function() {
-                    document.getElementById('cart-badge').innerHTML = getCartBadgeCount() + parseInt(quantity);
-                }
-            });
-        }
-    </script>
+    <script>window.onload = getCartItemsCount();</script>
 
     <div class="navbar">
         <div class="container">
@@ -35,7 +11,22 @@
                 </div>
 
                 <div class="nav-item nav-center">
-                    <input class="input search-input" type="search" placeholder="Search for an item..." name="search" id="nav-search">
+                    <div class="search-area">
+                        <input class="input search-input" type="search" placeholder="Search for an item..." name="search" id="nav-search" onkeyup="search()">
+
+                        <div class="search-results" id="search-results">
+                            <div class="search-spinner" id="search-spinner">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                            <div id="search-items"></div>
+                            <div class="no-search text-center" id="no-results">
+                                <h1><span class="icon-searching-magnifying-glass"></span></h1>
+                                <p>Sorry, no results found</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="nav-item nav-right">
